@@ -1,6 +1,6 @@
 # High-Frequency Trading OrderBook
 
-A high-performance limit order book implementation in modern C++ with Python bindings, designed for low-latency trading systems. This project demonstrates advanced data structures, algorithmic trading concepts, and systems programming skills relevant to quantitative software engineering.
+A high-performance limit order book implementation in modern C++ with Python bindings. This project explores low-latency data structures and matching engine algorithms used in electronic trading systems.
 
 ## Features
 
@@ -236,23 +236,19 @@ hft-orderbook/
 └── README.md                  # This file
 ```
 
-## Key Concepts Demonstrated
+## Key Concepts
 
-### For Quantitative Software Engineering
+### Order Book Mechanics
+- **Price-time priority**: Best price first, FIFO within price levels
+- **Market microstructure**: Limit orders, market orders, partial fills
+- **Trade execution**: Price improvement for aggressive orders
 
+### Technical Implementation
 - **Low-latency design**: Optimized data structures for microsecond-level performance
-- **Market microstructure**: Understanding of order book mechanics and matching rules
 - **Memory management**: Efficient use of smart pointers and STL containers
 - **Cache efficiency**: Data locality with contiguous storage (deque vs list)
 - **C++/Python integration**: Modern FFI techniques with pybind11
-
-### Technical Skills
-
-- Modern C++17 features (std::optional, structured bindings, etc.)
-- CMake build system configuration
-- Google Test framework for unit testing
-- Performance benchmarking and profiling
-- Cross-language bindings (C++ ↔ Python)
+- **Performance benchmarking**: Percentile-based latency analysis
 
 ## Future Enhancements
 
@@ -262,19 +258,11 @@ hft-orderbook/
 - [ ] VWAP and TWAP calculation
 - [ ] FIX protocol integration
 - [ ] Lock-free concurrent orderbook
-- [ ] FPGA/GPU acceleration exploration
+- [ ] Memory pooling and intrusive data structures for improved cancel performance
 
 ## License
 
 MIT License - see LICENSE file for details
-
-## Author
-
-Built as a demonstration project for quantitative software engineering roles, showcasing:
-- Systems programming in C++
-- Financial market data structures
-- High-performance computing
-- Software engineering best practices
 
 ---
 

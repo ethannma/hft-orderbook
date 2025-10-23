@@ -87,9 +87,9 @@
 - **Order types**: Limit and market orders supported
 - **Partial fills**: Supported with quantity tracking
 
-## Resume-Safe Summary
+## Summary
 
-Single-thread C++17 LOB with market/IOC/FOK and O(1) add/cancel. Bench (macOS, Clang 17, -O3): ~2.6M inserts/s (p99 1.38 µs), ~0.83M cancels/s (p99 3.38 µs), ~5.8M aggressive orders/s match (p99 0.5 µs), 10-level depth ~0.079 µs/query; best bid/ask O(1) and below harness resolution when hot.
+Single-threaded C++17 limit order book with price-time priority matching. Benchmarked on macOS with Clang 17 (-O3): ~2.6M inserts/s (p99 1.38 µs), ~0.83M cancels/s (p99 3.38 µs), ~5.8M aggressive orders/s match (p99 0.5 µs), 10-level depth ~0.079 µs/query; best bid/ask O(1) and below timer resolution when hot.
 
 ## Detailed Breakdown
 

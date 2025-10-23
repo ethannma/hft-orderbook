@@ -2,7 +2,7 @@
 
 ## Overview
 
-A production-quality limit order book implementation in modern C++17 designed for low-latency trading systems. Features price-time priority matching, comprehensive testing, and Python bindings for analysis.
+A high-performance limit order book implementation in modern C++17. This project explores low-latency data structures, matching engine algorithms, and performance optimization techniques used in electronic trading systems.
 
 ## Key Achievements
 
@@ -43,11 +43,7 @@ A production-quality limit order book implementation in modern C++17 designed fo
 - Performance benchmarking suite
 - Unit tests in both C++ and Python
 
-## Resume Line
-
-> Single-thread C++17 LOB with market/IOC/FOK and O(1) add/cancel. Bench (macOS, Clang 17, -O3): ~2.6M inserts/s (p99 1.38 µs), ~0.83M cancels/s (p99 3.38 µs), ~5.8M aggressive orders/s match (p99 0.5 µs), 10-level depth ~0.079 µs/query; best bid/ask O(1) and below harness resolution when hot.
-
-## Skills Demonstrated
+## Technical Highlights
 
 **Systems Programming:**
 - Modern C++17 (smart pointers, std::optional, structured bindings)
@@ -60,11 +56,11 @@ A production-quality limit order book implementation in modern C++17 designed fo
 - Cross-language bindings (C++/Python)
 - Professional documentation
 
-**Financial Domain:**
-- Market microstructure understanding
-- Order book mechanics and matching rules
-- Price-time priority implementation
+**Order Book Mechanics:**
+- Market microstructure fundamentals
+- Price-time priority matching
 - Trade execution semantics
+- Real-time market data queries
 
 **Performance Engineering:**
 - Sub-microsecond latency optimization
@@ -110,13 +106,13 @@ python3 python/example.py
 python3 python/benchmark.py
 ```
 
-## Why This Project Stands Out for Quant Roles
+## Project Highlights
 
-1. **Real-world relevance**: Order books are fundamental to electronic trading
-2. **Performance focus**: Sub-microsecond latencies demonstrate optimization skills
-3. **Professional quality**: Comprehensive testing, documentation, benchmarking
-4. **Domain knowledge**: Shows understanding of market microstructure
-5. **Technical depth**: Modern C++, cross-language bindings, build systems
+1. **Real-world relevance**: Implements core data structures used in electronic trading systems
+2. **Performance focus**: Sub-microsecond latencies through careful optimization
+3. **Professional quality**: Comprehensive testing, documentation, and benchmarking methodology
+4. **Domain complexity**: Implements market microstructure concepts and matching rules
+5. **Technical depth**: Modern C++, cross-language bindings, build systems, and performance analysis
 
 ## Future Enhancements
 
@@ -135,7 +131,5 @@ python3 python/benchmark.py
 - Order book snapshots and replay functionality
 
 ---
-
-**GitHub**: [github.com/ethannma/hft-orderbook](https://github.com/ethannma/hft-orderbook)
 
 **Technologies**: C++17, CMake, pybind11, Google Test, Python
