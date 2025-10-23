@@ -1,0 +1,22 @@
+#!/bin/bash
+# Quick commands for running the HFT OrderBook project
+
+echo "=== HFT OrderBook - Quick Commands ==="
+echo ""
+echo "Build commands:"
+echo "  cmake -B build && cmake --build build -j"
+echo ""
+echo "Run C++ tests:"
+echo "  ./build/orderbook_test"
+echo ""
+echo "Run C++ benchmarks:"
+echo "  ./build/orderbook_benchmark"
+echo ""
+echo "Run Python example:"
+echo "  python3 python/example.py"
+echo ""
+echo "Run Python benchmarks:"
+echo "  python3 python/benchmark.py"
+echo ""
+echo "Run Python tests:"
+echo "  python3 python/test_orderbook.py"
