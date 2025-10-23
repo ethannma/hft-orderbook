@@ -263,7 +263,3 @@ hft-orderbook/
 ## License
 
 MIT License - see LICENSE file for details
-
----
-
-**Note for Resume**: This project demonstrates proficiency in C++ systems programming, understanding of financial market microstructure, and ability to build production-quality low-latency trading systems - key skills for quantitative software engineering roles at trading firms and hedge funds.
