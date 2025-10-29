@@ -25,7 +25,7 @@ A high-performance limit order book implementation in modern C++ with Python bin
 - Limit orders (with partial fills)
 - Market orders
 - Order cancellation
-- Order modification
+- Order modification (enforces time priority loss on quantity increases)
 - Market depth queries (top N levels)
 - Volume aggregation at price levels
 - Real-time spread and mid-price calculations
@@ -36,10 +36,10 @@ Benchmarked on macOS with Apple Clang 17.0, Release build (-O3), single-threaded
 
 | Operation | Mean | Median (p50) | p90 | p99 | Throughput |
 |-----------|------|--------------|-----|-----|------------|
-| Order Insertion | 0.385 µs | 0.25 µs | 0.63 µs | 1.38 µs | ~2.6M ops/sec |
-| Order Cancellation | 1.201 µs | 0.71 µs | 1.71 µs | 3.38 µs | ~0.83M ops/sec |
-| Order Matching | 0.173 µs | 0.13 µs | 0.21 µs | 0.50 µs | ~5.8M ops/sec |
-| Market Depth (10 levels) | ~0.079 µs | - | - | - | ~12.6M queries/sec |
+| Order Insertion | 0.336 µs | 0.21 µs | 0.54 µs | 1.33 µs | ~3.0M ops/sec |
+| Order Cancellation | 0.812 µs | 0.58 µs | 1.08 µs | 1.58 µs | ~1.2M ops/sec |
+| Order Matching | 0.155 µs | 0.13 µs | 0.21 µs | 0.42 µs | ~6.4M ops/sec |
+| Market Depth (10 levels) | ~0.082 µs | - | - | - | ~12.3M queries/sec |
 | Best Bid/Ask | O(1)* | - | - | - | Sub-100ns when hot |
 
 *O(1) pointer dereference; below timer resolution

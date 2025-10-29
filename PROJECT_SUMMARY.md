@@ -7,10 +7,10 @@ A high-performance limit order book implementation in modern C++17. This project
 ## Key Achievements
 
 ### Performance (Single-threaded, macOS, Clang 17, -O3)
-- **Order Insertion**: ~2.6M ops/sec (mean: 0.385 µs, p99: 1.38 µs)
-- **Order Cancellation**: ~0.83M ops/sec (mean: 1.201 µs, p99: 3.38 µs)
-- **Order Matching**: ~5.8M ops/sec (mean: 0.173 µs, p99: 0.50 µs)
-- **Market Depth (10 levels)**: ~12.6M queries/sec (~0.079 µs per query)
+- **Order Insertion**: ~3.0M ops/sec (mean: 0.336 µs, p99: 1.33 µs)
+- **Order Cancellation**: ~1.2M ops/sec (mean: 0.812 µs, p99: 1.58 µs)
+- **Order Matching**: ~6.4M ops/sec (mean: 0.155 µs, p99: 0.42 µs)
+- **Market Depth (10 levels)**: ~12.3M queries/sec (~0.082 µs per query)
 - **Best Bid/Ask**: O(1), sub-100ns when hot (below timer resolution)
 
 ### Technical Implementation
@@ -20,7 +20,8 @@ A high-performance limit order book implementation in modern C++17. This project
 - Support for limit and market orders
 - Partial fill handling
 - Real-time market data queries (best bid/ask, depth, spread)
-- Order modification and cancellation
+- Order modification with time priority loss on quantity increases
+- Order cancellation
 
 **Data Structures:**
 - `std::map` for O(log n) sorted price level access
@@ -29,9 +30,10 @@ A high-performance limit order book implementation in modern C++17. This project
 - `std::unordered_map` for O(1) order lookup by ID
 
 **Quality Assurance:**
-- 16 comprehensive unit tests using Google Test
+- 18 comprehensive unit tests using Google Test
 - Invariant checking: bid < ask, positive quantities, monotonic trades
 - FIFO fill order verification
+- Time priority loss validation on order modifications
 - Full and partial fill correctness
 - Trade price validation (passive order's price)
 

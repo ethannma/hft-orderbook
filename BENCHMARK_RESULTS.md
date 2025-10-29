@@ -11,33 +11,33 @@
 ## Performance Results
 
 ### Order Insertion
-- **Throughput**: ~2.6M orders/sec
-- **Latency (mean)**: 0.385 µs
-- **Latency (p50)**: 0.25 µs
-- **Latency (p90)**: 0.63 µs  
-- **Latency (p99)**: 1.38 µs
+- **Throughput**: ~3.0M orders/sec
+- **Latency (mean)**: 0.336 µs
+- **Latency (p50)**: 0.21 µs
+- **Latency (p90)**: 0.54 µs  
+- **Latency (p99)**: 1.33 µs
 
 ### Order Cancellation
-- **Throughput**: ~0.83M cancels/sec
-- **Latency (mean)**: 1.201 µs
-- **Latency (p50)**: 0.71 µs
-- **Latency (p90)**: 1.71 µs
-- **Latency (p99)**: 3.38 µs
+- **Throughput**: ~1.2M cancels/sec
+- **Latency (mean)**: 0.812 µs
+- **Latency (p50)**: 0.58 µs
+- **Latency (p90)**: 1.08 µs
+- **Latency (p99)**: 1.58 µs
 - **Note**: Slower than inserts due to lookup/cleanup overhead
 
 ### Order Matching (Aggressive Orders)
-- **Throughput**: ~5.8M orders/sec
-- **Latency (mean)**: 0.173 µs
+- **Throughput**: ~6.4M orders/sec
+- **Latency (mean)**: 0.155 µs
 - **Latency (p50)**: 0.13 µs
 - **Latency (p90)**: 0.21 µs
-- **Latency (p99)**: 0.50 µs
+- **Latency (p99)**: 0.42 µs
 - **Fill ratio**: ~2 trades per aggressive order
 
 ### Market Data Queries
 
 #### Market Depth (10 levels)
-- **Throughput**: ~12.6M queries/sec
-- **Latency**: ~0.079 µs/query
+- **Throughput**: ~12.3M queries/sec
+- **Latency**: ~0.082 µs/query
 
 *Note: Best bid/ask queries are near timer resolution and not reported separately*
 
@@ -89,15 +89,15 @@
 
 ## Summary
 
-Single-threaded C++17 limit order book with price-time priority matching. Benchmarked on macOS with Clang 17 (-O3): ~2.6M inserts/s (p99 1.38 µs), ~0.83M cancels/s (p99 3.38 µs), ~5.8M aggressive orders/s match (p99 0.5 µs), 10-level depth ~0.079 µs/query; best bid/ask O(1) and below timer resolution when hot.
+Single-threaded C++17 limit order book with price-time priority matching. Benchmarked on macOS with Clang 17 (-O3): ~3.0M inserts/s (p99 1.33 µs), ~1.2M cancels/s (p99 1.58 µs), ~6.4M aggressive orders/s match (p99 0.42 µs), 10-level depth ~0.082 µs/query; best bid/ask O(1) and below timer resolution when hot.
 
 ## Detailed Breakdown
 
 **Performance (Single-threaded, macOS, Clang 17, -O3):**
-- Order Insertion: ~2.6M ops/sec (mean: 0.385 µs, p99: 1.38 µs)
-- Order Cancellation: ~0.83M ops/sec (mean: 1.201 µs, p99: 3.38 µs) ⚠️ *Slower than inserts due to lookup/cleanup costs*
-- Order Matching: ~5.8M ops/sec (mean: 0.173 µs, p99: 0.5 µs)
-- Market Depth (10 levels): ~12.6M queries/sec (~0.079 µs per query)
+- Order Insertion: ~3.0M ops/sec (mean: 0.336 µs, p99: 1.33 µs)
+- Order Cancellation: ~1.2M ops/sec (mean: 0.812 µs, p99: 1.58 µs) ⚠️ *Slower than inserts due to lookup/cleanup costs*
+- Order Matching: ~6.4M ops/sec (mean: 0.155 µs, p99: 0.42 µs)
+- Market Depth (10 levels): ~12.3M queries/sec (~0.082 µs per query)
 - Best Bid/Ask: O(1) pointer deref, sub-100ns when hot (below timer resolution)
 
 **Architecture:**
@@ -105,8 +105,8 @@ Single-threaded C++17 limit order book with price-time priority matching. Benchm
 
 ## Performance Notes
 
-### Cancel Latency Regression
-Current cancel performance (~0.83M ops/s) is slower than insert performance (~2.6M ops/s). This is expected due to:
+### Cancel Latency Analysis
+Current cancel performance (~1.2M ops/s) is slower than insert performance (~3.0M ops/s). This is expected due to:
 - Hash map lookup overhead for order ID
 - Deque iterator invalidation on erase
 - Memory deallocation on hot path
