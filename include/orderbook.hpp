@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <optional>
+#include <limits>
 
 namespace hft {
 
@@ -20,15 +21,19 @@ enum class OrderType : uint8_t {
     MARKET
 };
 
+// Sentinel value for market orders (use max double instead of 0.0)
+constexpr double MARKET_ORDER_PRICE = std::numeric_limits<double>::max();
+
 struct Order {
     uint64_t order_id;
     Side side;
     double price;
     uint64_t quantity;
     uint64_t timestamp;
+    OrderType type;
     
-    Order(uint64_t id, Side s, double p, uint64_t qty, uint64_t ts)
-        : order_id(id), side(s), price(p), quantity(qty), timestamp(ts) {}
+    Order(uint64_t id, Side s, double p, uint64_t qty, uint64_t ts, OrderType t = OrderType::LIMIT)
+        : order_id(id), side(s), price(p), quantity(qty), timestamp(ts), type(t) {}
 };
 
 struct Trade {
@@ -101,8 +106,8 @@ public:
     
 private:
     void match_order(std::shared_ptr<Order> order);
-    void execute_trade(std::shared_ptr<Order> aggressive_order, 
-                      std::shared_ptr<Order> passive_order,
+    void execute_trade(std::shared_ptr<Order> buy_order, 
+                      std::shared_ptr<Order> sell_order,
                       uint64_t quantity);
     
     std::string symbol_;

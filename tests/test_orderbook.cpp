@@ -255,6 +255,48 @@ TEST_F(OrderBookTest, TradeExecutionPrice) {
     EXPECT_EQ(trades[0].price, 100.0); // Price improvement for aggressive order
 }
 
+TEST_F(OrderBookTest, ModifyOrderLosesTimePriority) {
+    // Add three orders at same price
+    ob->add_limit_order(1, Side::BUY, 100.0, 50);
+    ob->add_limit_order(2, Side::BUY, 100.0, 50);
+    ob->add_limit_order(3, Side::BUY, 100.0, 50);
+    
+    // Increase quantity on order 1 (should lose time priority)
+    EXPECT_TRUE(ob->modify_order(1, 100));
+    
+    // Add aggressive sell order that fills 50 shares
+    ob->add_limit_order(4, Side::SELL, 100.0, 50);
+    
+    // Order 2 should have filled (was first after order 1 lost priority)
+    auto trades = ob->get_trades();
+    EXPECT_EQ(trades.size(), 1);
+    EXPECT_EQ(trades[0].buy_order_id, 2); // Order 2 should fill, not order 1
+    
+    // Order 1 and 3 should still be in the book
+    EXPECT_EQ(ob->get_bid_volume_at_price(100.0), 150); // 100 + 50
+}
+
+TEST_F(OrderBookTest, ModifyOrderDecreaseKeepsTimePriority) {
+    // Add three orders at same price
+    ob->add_limit_order(1, Side::BUY, 100.0, 100);
+    ob->add_limit_order(2, Side::BUY, 100.0, 50);
+    ob->add_limit_order(3, Side::BUY, 100.0, 50);
+    
+    // Decrease quantity on order 1 (should keep time priority)
+    EXPECT_TRUE(ob->modify_order(1, 50));
+    
+    // Add aggressive sell order that fills 50 shares
+    ob->add_limit_order(4, Side::SELL, 100.0, 50);
+    
+    // Order 1 should have filled (kept time priority)
+    auto trades = ob->get_trades();
+    EXPECT_EQ(trades.size(), 1);
+    EXPECT_EQ(trades[0].buy_order_id, 1); // Order 1 should fill first
+    
+    // Orders 2 and 3 should still be in the book
+    EXPECT_EQ(ob->get_bid_volume_at_price(100.0), 100); // 50 + 50
+}
+
 int main(int argc, char **argv) {
     ::testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

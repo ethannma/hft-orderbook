@@ -48,8 +48,9 @@ bool OrderBook::add_market_order(uint64_t order_id, Side side, uint64_t quantity
         return false;
     }
     
-    // Market orders use price 0 as a placeholder (they match at any price)
-    auto order = std::make_shared<Order>(order_id, side, 0.0, quantity, timestamp_counter_++);
+    // Market orders use sentinel value to distinguish from limit orders
+    auto order = std::make_shared<Order>(order_id, side, MARKET_ORDER_PRICE, quantity, 
+                                        timestamp_counter_++, OrderType::MARKET);
     orders_[order_id] = order;
     
     match_order(order);
@@ -104,7 +105,18 @@ bool OrderBook::modify_order(uint64_t order_id, uint64_t new_quantity) {
     auto order = it->second;
     uint64_t old_quantity = order->quantity;
     
-    // Update quantity in both the order and the price level
+    // If quantity increases, lose time priority (move to back of queue)
+    if (new_quantity > old_quantity) {
+        // Cancel and re-add to lose time priority
+        Side side = order->side;
+        double price = order->price;
+        
+        cancel_order(order_id);
+        add_limit_order(order_id, side, price, new_quantity);
+        return true;
+    }
+    
+    // Quantity decrease: maintain time priority, just update quantity
     if (order->side == Side::BUY) {
         auto level_it = bids_.find(order->price);
         if (level_it != bids_.end()) {
@@ -128,13 +140,14 @@ void OrderBook::match_order(std::shared_ptr<Order> order) {
             auto& best_ask_level = asks_.begin()->second;
             
             // For market orders, match at any price; for limit orders, check price
-            if (order->price > 0.0 && order->price < best_ask_level.price) {
+            if (order->type == OrderType::LIMIT && order->price < best_ask_level.price) {
                 break; // No more matches possible
             }
             
             auto& passive_order = best_ask_level.orders.front();
             uint64_t trade_quantity = std::min(order->quantity, passive_order->quantity);
             
+            // Buy order is aggressive, sell order (passive_order) is passive
             execute_trade(order, passive_order, trade_quantity);
             
             order->quantity -= trade_quantity;
@@ -158,13 +171,14 @@ void OrderBook::match_order(std::shared_ptr<Order> order) {
             auto& best_bid_level = bids_.begin()->second;
             
             // For market orders, match at any price; for limit orders, check price
-            if (order->price > 0.0 && order->price > best_bid_level.price) {
+            if (order->type == OrderType::LIMIT && order->price > best_bid_level.price) {
                 break; // No more matches possible
             }
             
             auto& passive_order = best_bid_level.orders.front();
             uint64_t trade_quantity = std::min(order->quantity, passive_order->quantity);
             
+            // Sell order is aggressive, buy order (passive_order) is passive
             execute_trade(passive_order, order, trade_quantity);
             
             order->quantity -= trade_quantity;
@@ -185,12 +199,16 @@ void OrderBook::match_order(std::shared_ptr<Order> order) {
     }
 }
 
-void OrderBook::execute_trade(std::shared_ptr<Order> aggressive_order,
-                              std::shared_ptr<Order> passive_order,
+void OrderBook::execute_trade(std::shared_ptr<Order> buy_order,
+                              std::shared_ptr<Order> sell_order,
                               uint64_t quantity) {
+    // Determine which order was on the book first (passive order)
+    // Trade executes at passive order's price
+    auto passive_order = (buy_order->timestamp < sell_order->timestamp) ? buy_order : sell_order;
+    
     Trade trade{
-        aggressive_order->side == Side::BUY ? aggressive_order->order_id : passive_order->order_id,
-        aggressive_order->side == Side::SELL ? aggressive_order->order_id : passive_order->order_id,
+        buy_order->order_id,
+        sell_order->order_id,
         passive_order->price, // Trade executes at passive order's price
         quantity,
         timestamp_counter_++
