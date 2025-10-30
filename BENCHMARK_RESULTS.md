@@ -58,9 +58,10 @@
 
 ## Correctness Verification
 
-### Unit Tests (16/16 passing)
+### Unit Tests (18/18 passing)
 - Price priority (best prices match first)
 - Time priority (FIFO within price levels)
+- Time priority loss on order quantity increases
 - Full and partial fills
 - Market and limit orders
 - Order modifications and cancellations
@@ -131,5 +132,3 @@ To improve cancel performance to match or exceed insert performance:
    - Thread pinning for consistent CPU scheduling
    - Multiple trial runs to reduce variance
    - Warmer cache state for representative measurements
-- 16 unit tests with invariant checking (bid < ask, positive quantities, monotonic trades)
-- FIFO fill order within price levels
