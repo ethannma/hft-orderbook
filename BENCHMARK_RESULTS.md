@@ -96,7 +96,7 @@ Single-threaded C++17 limit order book with price-time priority matching. Benchm
 
 **Performance (Single-threaded, macOS, Clang 17, -O3):**
 - Order Insertion: ~3.0M ops/sec (mean: 0.336 µs, p99: 1.33 µs)
-- Order Cancellation: ~1.2M ops/sec (mean: 0.812 µs, p99: 1.58 µs) ⚠️ *Slower than inserts due to lookup/cleanup costs*
+- Order Cancellation: ~1.2M ops/sec (mean: 0.812 µs, p99: 1.58 µs) *Slower than inserts due to lookup/cleanup costs*
 - Order Matching: ~6.4M ops/sec (mean: 0.155 µs, p99: 0.42 µs)
 - Market Depth (10 levels): ~12.3M queries/sec (~0.082 µs per query)
 - Best Bid/Ask: O(1) pointer deref, sub-100ns when hot (below timer resolution)
